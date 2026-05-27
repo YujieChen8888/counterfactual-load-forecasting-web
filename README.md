@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NACF Counterfactual Load Forecasting Website
 
-## Getting Started
+Academic project website for `Quantifying Event-Driven Demand Perturbations in Load Forecasting Using News-Aware Representation Learning`.
 
-First, run the development server:
+The interactive demo is browser-only. It uses preprocessed prediction curves and structured news metadata in `public/data/nacf-demo.json`; it does not load model checkpoints or expose trained weights.
+
+## Run
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+## Publish on GitHub Pages
 
-To learn more about Next.js, take a look at the following resources:
+This project is configured for static GitHub Pages deployment through `.github/workflows/deploy.yml`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Push this repository to GitHub.
+2. In the GitHub repository, open `Settings` -> `Pages`.
+3. Set `Source` to `GitHub Actions`.
+4. Push to the `main` branch, or manually run the `Deploy GitHub Pages` workflow.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+For a normal project repository, the published URL will be:
 
-## Deploy on Vercel
+```text
+https://<your-github-username>.github.io/counterfactual-load-forecasting-web/
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+For a user/organization Pages repository named `<your-github-username>.github.io`, the URL will be:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+https://<your-github-username>.github.io/
+```
+
+The workflow automatically sets the correct base path for either case.
+
+## Main Files
+
+- `src/app/page.tsx`: academic website and interactive counterfactual demo.
+- `src/app/globals.css`: responsive visual design.
+- `public/data/nacf-demo.json`: lightweight demo database generated from processed results.
+- `public/figures/`: manuscript figures reused by the website.
