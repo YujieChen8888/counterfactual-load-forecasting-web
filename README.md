@@ -21,12 +21,17 @@ npm run build
 
 ## Publish on GitHub Pages
 
-This project is configured for static GitHub Pages deployment through `.github/workflows/deploy.yml`.
+This project can be published as static files from the `gh-pages` branch.
 
-1. Push this repository to GitHub.
-2. In the GitHub repository, open `Settings` -> `Pages`.
-3. Set `Source` to `GitHub Actions`.
-4. Push to the `main` branch, or manually run the `Deploy GitHub Pages` workflow.
+1. Build with the repository base path:
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/counterfactual-load-forecasting-web npm run build
+```
+
+2. Publish the generated `out/` directory to the `gh-pages` branch.
+3. In the GitHub repository, open `Settings` -> `Pages`.
+4. Set `Source` to `Deploy from a branch`, select `gh-pages`, and choose `/ (root)`.
 
 For a normal project repository, the published URL will be:
 
@@ -40,7 +45,7 @@ For a user/organization Pages repository named `<your-github-username>.github.io
 https://<your-github-username>.github.io/
 ```
 
-The workflow automatically sets the correct base path for either case.
+When publishing under a different repository name, set `NEXT_PUBLIC_BASE_PATH` to `/<repository-name>` before building.
 
 ## Main Files
 
