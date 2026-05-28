@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "NACF | Counterfactual Load Forecasting",
   description:
-    "Academic project website for news-aware counterfactual load forecasting and event-driven demand perturbation analysis.",
+    "Academic project website for the News-Aware Context-Balancing Framework and model-estimated event-driven demand perturbation analysis.",
 };
 
 export default function RootLayout({

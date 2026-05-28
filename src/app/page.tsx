@@ -38,6 +38,12 @@ type Point = {
   perturbation: number;
 };
 
+type HistoryPoint = {
+  step: number;
+  time: string;
+  load: number;
+};
+
 type EventItem = {
   type: string;
   category: CategoryKey;
@@ -47,6 +53,7 @@ type EventItem = {
   text: string;
   justification: string;
   source: string;
+  timestep?: number;
 };
 
 type CaseItem = {
@@ -71,7 +78,30 @@ type CaseItem = {
     maxWind: number;
   };
   events: EventItem[];
+  history?: HistoryPoint[];
   points: Point[];
+};
+
+type CustomScenarioPoint = {
+  step: number;
+  hour: number;
+  time: string;
+  custom: number;
+  perturbation: number;
+  differenceFromFactual: number;
+};
+
+type CustomScenario = {
+  id: string;
+  label: string;
+  category: CategoryKey;
+  notebookCategory: string;
+  meanVsNoNews: number;
+  meanVsFactual: number;
+  absMeanVsNoNews: number;
+  peakVsNoNews: number;
+  events: EventItem[];
+  points: CustomScenarioPoint[];
 };
 
 type SummaryItem = {
@@ -121,47 +151,27 @@ type DemoData = {
     loadMax: number;
     tempMinC: number;
     tempMaxC: number;
-    categoryCounts: Record<CategoryKey, number>;
+    categoryCounts: Partial<Record<CategoryKey, number>>;
   };
   categories: Record<
     CategoryKey,
     { label: string; color: string; description: string }
   >;
   cases: CaseItem[];
+  customScenarios: CustomScenario[];
   summary: SummaryItem[];
   scatter: ScatterItem[];
+  notebook: {
+    source: string;
+    checkpoint: string;
+    meanFactualVsNoNews: number;
+    description: string;
+  };
 };
 
 const data = demoData as DemoData;
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const assetPath = (path: string) => `${basePath}${path}`;
-
-const categoryOrder: CategoryKey[] = [
-  "Env_Thermal",
-  "Env_Disaster",
-  "Soc_Calendar",
-  "Soc_Economic",
-  "Grid_Reliability",
-  "No_News",
-];
-
-const probeMultipliers: Record<CategoryKey, number> = {
-  No_News: 0,
-  Env_Thermal: 0.78,
-  Env_Disaster: 1.08,
-  Soc_Calendar: 0.92,
-  Soc_Economic: 0.86,
-  Grid_Reliability: 0.62,
-};
-
-const probeNames: Record<CategoryKey, string> = {
-  No_News: "No-event baseline",
-  Env_Thermal: "Heatwave alert",
-  Env_Disaster: "Bushfire disruption",
-  Soc_Calendar: "Major holiday",
-  Soc_Economic: "Demand response",
-  Grid_Reliability: "Reserve warning",
-};
 
 function formatMw(value: number) {
   const sign = value > 0 ? "+" : "";
@@ -198,7 +208,7 @@ function makePath(
 }
 
 function HeroSignal() {
-  const caseItem = data.cases.find((item) => item.slug === "disaster-bushfire")!;
+  const caseItem = data.cases[0];
   const width = 620;
   const height = 520;
   const pad = 46;
@@ -279,12 +289,12 @@ function HeroSignal() {
         );
       })}
       <g transform="translate(42 36)">
-        <rect width="250" height="80" rx="9" fill="#fffdf8" opacity="0.9" />
+        <rect width="272" height="80" rx="9" fill="#fffdf8" opacity="0.9" />
         <text x="18" y="29" fill="#17201d" fontSize="18" fontWeight="760">
-          Factual vs no-event baseline
+          Observed-news prediction
         </text>
         <text x="18" y="56" fill="#62716b" fontSize="14">
-          local counterfactual comparison
+          paired counterfactual diagnostic
         </text>
       </g>
     </svg>
@@ -294,9 +304,11 @@ function HeroSignal() {
 function ForecastChart({
   points,
   customValues,
+  mode,
 }: {
   points: Point[];
   customValues: number[];
+  mode: "observed" | "custom";
 }) {
   const width = 980;
   const height = 430;
@@ -383,7 +395,7 @@ function ForecastChart({
       <path d={baseline} fill="none" stroke="#64748b" strokeWidth="3.5" strokeDasharray="9 8" />
       <path d={truth} fill="none" stroke="#17201d" strokeWidth="3" opacity="0.65" />
       <path d={factual} fill="none" stroke="#0891b2" strokeWidth="3.5" opacity="0.82" />
-      <path d={custom} fill="none" stroke="#0f766e" strokeWidth="4.5" />
+      {mode === "custom" && <path d={custom} fill="none" stroke="#0f766e" strokeWidth="4.5" />}
       <text x={pad} y={28} fill="#62716b" fontSize="13" fontWeight="700">
         Demand, MW
       </text>
@@ -397,9 +409,11 @@ function ForecastChart({
 function PerturbationChart({
   points,
   customValues,
+  mode,
 }: {
   points: Point[];
   customValues: number[];
+  mode: "observed" | "custom";
 }) {
   const width = 980;
   const height = 185;
@@ -432,7 +446,9 @@ function PerturbationChart({
         return <circle key={originalIndex} cx={x} cy={y} r="4" fill="#dc2626" />;
       })}
       <text x={pad} y={26} fill="#62716b" fontSize="13" fontWeight="700">
-        Custom perturbation relative to no-event baseline
+        {mode === "custom"
+          ? "Custom-news perturbation relative to no-news counterfactual"
+          : "Observed-news perturbation relative to no-news counterfactual"}
       </text>
       <text x={width - pad - 92} y={height - 14} fill="#62716b" fontSize="12">
         half-hour steps
@@ -442,6 +458,10 @@ function PerturbationChart({
 }
 
 function ScatterPanel() {
+  if (!data.scatter.length) {
+    return null;
+  }
+
   const width = 760;
   const height = 250;
   const pad = 34;
@@ -480,25 +500,31 @@ function ScatterPanel() {
 }
 
 function InteractiveDemo() {
-  const [caseSlug, setCaseSlug] = useState(data.cases[2].slug);
+  const [caseSlug, setCaseSlug] = useState(data.cases[0].slug);
   const [mode, setMode] = useState<"observed" | "custom">("observed");
-  const [probe, setProbe] = useState<CategoryKey>("Env_Disaster");
+  const [scenarioId, setScenarioId] = useState(
+    data.customScenarios.find((scenario) => scenario.id === "storm_outage")?.id ??
+      data.customScenarios[0].id,
+  );
   const [intensity, setIntensity] = useState(100);
 
   const activeCase = data.cases.find((item) => item.slug === caseSlug) ?? data.cases[0];
   const activeColor = data.categories[activeCase.category].color;
+  const activeScenario =
+    data.customScenarios.find((scenario) => scenario.id === scenarioId) ??
+    data.customScenarios[0];
+  const scenarioColor = data.categories[activeScenario.category].color;
 
   const customValues = useMemo(() => {
     if (mode === "observed") {
       return activeCase.points.map((point) => point.factual);
     }
-    const multiplier = probeMultipliers[probe] * (intensity / 100);
+    const blend = intensity / 100;
     return activeCase.points.map((point, index) => {
-      const observedEffect = point.factual - point.baseline;
-      const periodicAdjustment = Math.sin((index / 47) * Math.PI) * 0.08 + 1;
-      return point.baseline + observedEffect * multiplier * periodicAdjustment;
+      const scenarioPoint = activeScenario.points[index];
+      return point.baseline + (scenarioPoint.custom - point.baseline) * blend;
     });
-  }, [activeCase, intensity, mode, probe]);
+  }, [activeCase, activeScenario, intensity, mode]);
 
   const customPerturbations = customValues.map(
     (value, index) => value - activeCase.points[index].baseline,
@@ -553,7 +579,7 @@ function InteractiveDemo() {
         </div>
 
         <div className="field">
-          <label htmlFor="intensity">Synthetic news intensity: {intensity}%</label>
+          <label htmlFor="intensity">Custom scenario blend: {intensity}%</label>
           <input
             id="intensity"
             type="range"
@@ -566,22 +592,22 @@ function InteractiveDemo() {
         </div>
 
         <div className="field">
-          <span className="toggle-label">Synthetic category probe</span>
+          <span className="toggle-label">Notebook custom-news scenario</span>
           <div className="category-buttons">
-            {categoryOrder.slice(0, 5).map((key) => (
+            {data.customScenarios.map((scenario) => (
               <button
-                key={key}
-                className={`category-button ${probe === key ? "active" : ""}`}
-                style={{ "--cat": data.categories[key].color } as React.CSSProperties}
+                key={scenario.id}
+                className={`category-button ${scenarioId === scenario.id ? "active" : ""}`}
+                style={{ "--cat": data.categories[scenario.category].color } as React.CSSProperties}
                 type="button"
                 onClick={() => {
-                  setProbe(key);
+                  setScenarioId(scenario.id);
                   setMode("custom");
                 }}
               >
                 <span className="category-label">
                   <span className="swatch" />
-                  {probeNames[key]}
+                  {scenario.label}
                 </span>
                 <ArrowRight size={16} />
               </button>
@@ -592,19 +618,21 @@ function InteractiveDemo() {
         <div className="case-stats">
           <div className="case-stat">
             <strong>{formatMw(meanPerturbation)}</strong>
-            <span>Mean perturbation</span>
+            <span>
+              {mode === "custom" ? "Mean custom vs no-news" : "Mean observed vs no-news"}
+            </span>
           </div>
           <div className="case-stat">
             <strong>{formatMw(peakPerturbation)}</strong>
-            <span>Peak signed effect</span>
+            <span>Peak signed perturbation</span>
           </div>
           <div className="case-stat">
             <strong>{formatMetric(absMean, " MW")}</strong>
-            <span>Abs-MP</span>
+            <span>Abs-MP diagnostic</span>
           </div>
           <div className="case-stat">
-            <strong>{activeCase.eventCount}</strong>
-            <span>Extracted events</span>
+            <strong>{mode === "custom" ? activeScenario.events.length : activeCase.eventCount}</strong>
+            <span>{mode === "custom" ? "Injected events" : "Observed events"}</span>
           </div>
         </div>
       </aside>
@@ -614,31 +642,36 @@ function InteractiveDemo() {
           <div>
             <h3>{activeCase.title}</h3>
             <p>
-              Forecast starts {activeCase.forecastStart}. The no-event baseline holds
-              the same operating context and masks the news treatment.
+              Forecast starts {activeCase.forecastStart}. The comparison holds the
+              same load, weather, and calendar history while changing the news
+              treatment representation.
             </p>
           </div>
-          <span className="badge" style={{ color: activeColor }}>
+          <span className="badge" style={{ color: mode === "custom" ? scenarioColor : activeColor }}>
             <Activity size={15} />
-            {data.categories[activeCase.category].label}
+            {mode === "custom"
+              ? data.categories[activeScenario.category].label
+              : data.categories[activeCase.category].label}
           </span>
         </div>
         <div className="chart-wrap">
-          <ForecastChart points={activeCase.points} customValues={customValues} />
-          <PerturbationChart points={activeCase.points} customValues={customValues} />
+          <ForecastChart points={activeCase.points} customValues={customValues} mode={mode} />
+          <PerturbationChart points={activeCase.points} customValues={customValues} mode={mode} />
         </div>
         <div className="legend">
-          <span className="legend-item">
-            <span className="legend-line" style={{ "--legend": "#0f766e" } as React.CSSProperties} />
-            Custom / selected treatment
-          </span>
+          {mode === "custom" && (
+            <span className="legend-item">
+              <span className="legend-line" style={{ "--legend": "#0f766e" } as React.CSSProperties} />
+              Custom-news scenario
+            </span>
+          )}
           <span className="legend-item">
             <span className="legend-line" style={{ "--legend": "#0891b2" } as React.CSSProperties} />
-            Observed factual
+            Observed-news prediction
           </span>
           <span className="legend-item">
             <span className="legend-line" style={{ "--legend": "#64748b" } as React.CSSProperties} />
-            No-event baseline
+            No-news counterfactual
           </span>
           <span className="legend-item">
             <span className="legend-line" style={{ "--legend": "#17201d" } as React.CSSProperties} />
@@ -650,12 +683,12 @@ function InteractiveDemo() {
       <div className="below-grid">
         <div className="events-panel">
           <div className="mini-title">
-            <span>Structured news in this window</span>
+            <span>{mode === "custom" ? "Injected custom news" : "Observed news in this window"}</span>
             <Newspaper size={17} />
           </div>
           <div className="events-list">
-            {activeCase.events.length ? (
-              activeCase.events.slice(0, 4).map((event) => (
+            {(mode === "custom" ? activeScenario.events : activeCase.events).length ? (
+              (mode === "custom" ? activeScenario.events : activeCase.events).slice(0, 4).map((event) => (
                 <article className="event-item" key={`${event.publicationTime}-${event.text}`}>
                   <div className="event-meta">
                     <span
@@ -677,7 +710,7 @@ function InteractiveDemo() {
               ))
             ) : (
               <article className="event-item">
-                <p>No demand-relevant news event was extracted for this window.</p>
+                <p>No demand-relevant news event is present for this selection.</p>
               </article>
             )}
           </div>
@@ -685,9 +718,14 @@ function InteractiveDemo() {
 
         <div className="summary-panel">
           <div className="mini-title">
-            <span>Demo database summary</span>
+            <span>Notebook scenario summary</span>
             <Database size={17} />
           </div>
+          <p className="panel-note">
+            Exported from {data.notebook.source}: factual prediction with observed
+            news, no-news counterfactual prediction, and custom-news scenario
+            prediction under one shared historical context.
+          </p>
           <div className="summary-bars">
             {data.summary
               .filter((item) => item.category !== "No_News")
@@ -735,6 +773,7 @@ export default function Home() {
           <span>NACF Counterfactual Load Forecasting</span>
         </a>
         <div className="nav-links">
+          <a href="#motivation">Why Counterfactual</a>
           <a href="#method">Method</a>
           <a href="#results">Results</a>
           <a href="#demo">Demo</a>
@@ -759,8 +798,8 @@ export default function Home() {
             </h1>
             <p className="hero-copy">
               {data.paper.subtitle}. The site presents the paper, the NACF model,
-              forecasting results, and a browser-only demo for factual versus
-              no-event load trajectories.
+              forecasting results, and a browser-only demo for comparing
+              observed-news predictions with no-news and custom-news scenarios.
             </p>
             <div className="hero-actions">
               <a className="button primary" href="#demo">
@@ -779,12 +818,13 @@ export default function Home() {
             <div className="hero-overlay">
               <div className="mini-console">
                 <div className="mini-title">
-                  <span>News-aware baseline comparison</span>
+                  <span>Event-driven perturbation analysis</span>
                   <Gauge size={17} />
                 </div>
                 <p>
-                  Factual forecast and no-event baseline are evaluated under the
-                  same historical load, weather, and calendar context.
+                  Predictions are compared under the same historical load,
+                  weather, and calendar context to summarize model-estimated
+                  demand perturbations.
                 </p>
               </div>
             </div>
@@ -806,7 +846,63 @@ export default function Home() {
           </div>
           <div className="metric">
             <strong>{formatMw(data.metrics.meanPerturbation)}</strong>
-            <span>Mean factual minus no-event perturbation in the trained result</span>
+            <span>Mean observed-news minus no-news perturbation in the trained result</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="motivation">
+        <div className="section-inner">
+          <div className="section-head">
+            <div>
+              <p className="section-kicker">Motivation</p>
+              <h2>Why Counterfactual Forecasting</h2>
+            </div>
+            <p className="section-lede">
+              Conventional factual forecasting asks what the next load trajectory
+              will be under the observed data. During unusual social, weather, or
+              grid events, operators also need a diagnostic comparison: given the
+              same historical operating state, how does the forecast change when
+              the observed news context is replaced by a no-news treatment
+              representation?
+            </p>
+          </div>
+          <div className="comparison-grid">
+            <article className="comparison-card">
+              <div className="comparison-icon">
+                <LineChart size={24} />
+              </div>
+              <h3>Factual prediction</h3>
+              <p>
+                Existing news-augmented forecasting mainly treats news as an
+                auxiliary input for improving point-forecast accuracy. It answers
+                the operational question: what demand should we expect?
+              </p>
+            </article>
+            <article className="comparison-card emphasis">
+              <div className="comparison-icon">
+                <SlidersHorizontal size={24} />
+              </div>
+              <h3>Counterfactual perturbation analysis</h3>
+              <p>
+                NACF keeps the historical load, weather, and calendar context
+                fixed, then compares observed-news and no-news predictions. The
+                difference is interpreted as a model-estimated event-driven
+                demand perturbation.
+              </p>
+            </article>
+            <article className="comparison-card">
+              <div className="comparison-icon">
+                <ShieldCheck size={24} />
+              </div>
+              <h3>Why balancing matters</h3>
+              <p>
+                News occurrence is observational and correlated with background
+                drivers such as heat, holidays, and scarcity conditions. The
+                reweighting and IPM terms make comparisons less dominated by
+                observable treatment-context imbalance.
+              </p>
+            </article>
           </div>
         </div>
       </section>
@@ -820,10 +916,9 @@ export default function Home() {
             </div>
             <p className="section-lede">
               The paper reframes news-augmented load forecasting as event-driven
-              demand perturbation analysis. Instead of only asking whether news
-              improves point forecasts, NACF asks how the predicted load changes
-              when the same operating state is evaluated with observed news versus
-              a no-event baseline.
+              demand perturbation analysis. It compares factual forecasts under
+              observed news with baseline forecasts under a no-news representation,
+              while keeping the same historical operating context fixed.
             </p>
           </div>
           <div className="metric-grid">
@@ -833,7 +928,7 @@ export default function Home() {
             </div>
             <div className="stat">
               <strong>{data.dataset.events.toLocaleString()}</strong>
-              <span>LLM-extracted demand-relevant news events in the local demo data</span>
+              <span>LLM-extracted demand-relevant news events in the prepared 2019 data</span>
             </div>
             <div className="stat">
               <strong>48</strong>
@@ -852,7 +947,7 @@ export default function Home() {
           <div className="section-head">
             <div>
               <p className="section-kicker">NACF Method</p>
-              <h2>News-Aware Context Balancing</h2>
+              <h2>News-Aware Context-Balancing Framework</h2>
             </div>
             <p className="section-lede">
               NACF combines multivariate time-series encoding, structured news
@@ -882,7 +977,7 @@ export default function Home() {
                   <h3>Operating-context encoder</h3>
                   <p>
                     Load, weather, and calendar histories are encoded into a
-                    latent operating state that supports factual and baseline
+                    latent operating state that supports observed-news and no-news
                     forecasts under the same context.
                   </p>
                 </div>
@@ -900,10 +995,11 @@ export default function Home() {
               <div className="flow-step">
                 <LineChart size={26} />
                 <div>
-                  <h3>Factual versus no-event comparison</h3>
+                  <h3>Observed-news versus no-news comparison</h3>
                   <p>
                     The estimated perturbation is the horizon-wise difference
-                    between the observed-news forecast and the no-news baseline.
+                    between the observed-news forecast and the no-news
+                    counterfactual prediction.
                   </p>
                 </div>
               </div>
@@ -1004,10 +1100,10 @@ export default function Home() {
               <h2>Browser-Only Counterfactual Tool</h2>
             </div>
             <p className="section-lede">
-              Select a preprocessed test window, compare factual and no-event
-              curves, then switch to custom mode to scale a synthetic event
-              category. This is an illustrative database demo: it uses exported
-              predictions and news metadata, not the model checkpoint.
+              This panel follows the tutorial notebook: observed-news prediction,
+              no-news counterfactual prediction, and custom-news scenario
+              prediction for the same historical operating context. It uses
+              exported predictions and news metadata, not the model checkpoint.
             </p>
           </div>
           <InteractiveDemo />
