@@ -17,6 +17,8 @@ import {
   Sparkles,
   Zap,
 } from "lucide-react";
+import katex from "katex";
+import "katex/dist/katex.min.css";
 import { useMemo, useState } from "react";
 import demoData from "../../public/data/nacf-demo.json";
 
@@ -172,6 +174,21 @@ type DemoData = {
 const data = demoData as DemoData;
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const assetPath = (path: string) => `${basePath}${path}`;
+
+function MathBlock({ expression }: { expression: string }) {
+  return (
+    <div
+      className="formula math-formula"
+      dangerouslySetInnerHTML={{
+        __html: katex.renderToString(expression, {
+          displayMode: true,
+          throwOnError: false,
+          strict: "ignore",
+        }),
+      }}
+    />
+  );
+}
 
 function formatMw(value: number) {
   const sign = value > 0 ? "+" : "";
@@ -971,9 +988,13 @@ export default function Home() {
                 the continuous semantic treatment encoding news information, and
                 the future load trajectory.
               </p>
-              <pre className="formula">{`D = {(X_i, T_i, Y_i)}_{i=1}^n
-Y = Y(T)
-mu(t, x) = E[Y(t) | X = x]`}</pre>
+              <MathBlock
+                expression={String.raw`\begin{aligned}
+\mathcal{D}&=\{(\mathbf{X}_i,T_i,Y_i)\}_{i=1}^{n},\\
+Y&=Y(T),\\
+\mu(t,\mathbf{x})&=\mathbb{E}[Y(t)\mid \mathbf{X}=\mathbf{x}]
+\end{aligned}`}
+              />
               <p className="formula-note">
                 X includes load, meteorological variables, and calendar
                 indicators; T encodes news event information; Y is the future
@@ -990,7 +1011,9 @@ mu(t, x) = E[Y(t) | X = x]`}</pre>
                 The target comparison changes the news treatment while holding
                 the same historical operating context fixed.
               </p>
-              <pre className="formula">{`mu(T_observed, x) - mu(T_0, x)`}</pre>
+              <MathBlock
+                expression={String.raw`\mu(T_{\mathrm{observed}},\mathbf{x})-\mu(T_0,\mathbf{x})`}
+              />
               <p className="formula-note">
                 This estimates news-related demand perturbations under observed
                 versus alternative news conditions, such as a no-news reference
@@ -1008,8 +1031,9 @@ mu(t, x) = E[Y(t) | X = x]`}</pre>
                 correlations. For example, high temperatures can both trigger
                 weather-warning news and directly increase cooling demand.
               </p>
-              <pre className="formula">{`Z = Phi(X)
-T <- Z -> Y`}</pre>
+              <MathBlock
+                expression={String.raw`\mathbf{Z}=\Phi(\mathbf{X}),\qquad T\leftarrow \mathbf{Z}\rightarrow Y`}
+              />
               <p className="formula-note">
                 NACF learns a confounder representation Z and reduces its
                 distributional discrepancy across treatment-intensity groups.
@@ -1025,7 +1049,12 @@ T <- Z -> Y`}</pre>
                 The bound decomposes the unobservable counterfactual error into
                 terms that can be controlled with observed data.
               </p>
-              <pre className="formula">epsilon(h) &lt;= epsilon_w(h) + IPM_Delta(Phi) + C1 * alpha * delta + C0</pre>
+              <MathBlock
+                expression={String.raw`\begin{aligned}
+\epsilon(h)\leq{}&\epsilon_w(h)+\mathrm{IPM}_{\Delta}(\Phi)\\
+&+C_1\alpha\delta+C_0
+\end{aligned}`}
+              />
               <p className="formula-note">
                 Weighted factual loss maps to learned sample reweighting;
                 IPM_Delta(Phi) maps to MMD-based representation balance; the

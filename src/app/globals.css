@@ -388,11 +388,21 @@ button {
   border-radius: 0.6rem;
   background: rgba(23, 32, 29, 0.045);
   color: #1f2d29;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  font-size: 0.86rem;
-  line-height: 1.55;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  overflow-x: auto;
+}
+
+.math-formula .katex-display {
+  margin: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.math-formula .katex {
+  font-size: 1.02rem;
+}
+
+.math-formula .katex-html {
+  white-space: normal;
 }
 
 .formula-note {
@@ -959,5 +969,9 @@ input[type="range"] {
   .footer-inner {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .math-formula .katex {
+    font-size: 0.9rem;
   }
 }
