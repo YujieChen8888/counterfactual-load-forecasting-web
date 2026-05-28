@@ -681,20 +681,20 @@ function InteractiveDemo() {
           {mode === "custom" && (
             <span className="legend-item">
               <span className="legend-line" style={{ "--legend": "#0f766e" } as React.CSSProperties} />
-              Custom-news scenario
+              Forecast under injected news scenario
             </span>
           )}
           <span className="legend-item">
             <span className="legend-line" style={{ "--legend": "#0891b2" } as React.CSSProperties} />
-            Observed-news prediction
+            Forecast under observed news (factual)
           </span>
           <span className="legend-item">
-            <span className="legend-line" style={{ "--legend": "#64748b" } as React.CSSProperties} />
-            Reference treatment
+            <span className="legend-line dashed" style={{ "--legend": "#64748b" } as React.CSSProperties} />
+            Forecast under no-news baseline (counterfactual)
           </span>
           <span className="legend-item">
             <span className="legend-line" style={{ "--legend": "#17201d" } as React.CSSProperties} />
-            True load
+            True load (ground truth)
           </span>
         </div>
       </div>

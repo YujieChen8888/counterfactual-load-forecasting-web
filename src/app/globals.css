@@ -772,6 +772,16 @@ input[type="range"] {
   background: var(--legend);
 }
 
+.legend-line.dashed {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--legend) 0px,
+    var(--legend) 4px,
+    transparent 4px,
+    transparent 7px
+  );
+}
+
 .below-grid {
   display: grid;
   grid-column: 1 / -1;
