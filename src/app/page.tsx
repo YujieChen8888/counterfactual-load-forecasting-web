@@ -810,7 +810,7 @@ export default function Home() {
           <div>
             <p className="eyebrow">
               <Sparkles size={16} />
-              Academic project website
+              News-aware counterfactual load analysis
             </p>
             <h1>
               Counterfactual
@@ -827,11 +827,11 @@ export default function Home() {
             <div className="hero-actions">
               <a className="button primary" href="#demo">
                 <SlidersHorizontal size={18} />
-                Open Interactive Demo
+                Explore Scenarios
               </a>
               <a className="button secondary" href="#method">
                 <FileText size={18} />
-                Read Method
+                View Method
               </a>
             </div>
           </div>
@@ -949,11 +949,9 @@ export default function Home() {
                 />
               </div>
               <p className="figure-caption">
-                Paper Figure Intro_motivation: comparison between existing
-                news-augmented forecasting and the proposed NACF framework. NACF
-                not only produces factual load forecasts, but also enables
-                explicit changes to news interventions for counterfactual
-                prediction.
+                Motivation figure: factual forecasting optimizes the observed
+                load trajectory, whereas NACF changes the news treatment while
+                holding the historical context fixed.
               </p>
             </div>
           </div>
@@ -1172,9 +1170,8 @@ Y&=Y(T),\\
                 />
               </div>
               <p className="figure-caption">
-                Paper figure: overview of NACF, including structured event stream
-                construction, model architecture, and counterfactual inference
-                for load analysis.
+                Method overview: structured event extraction, representation
+                learning, and counterfactual inference for load analysis.
               </p>
             </div>
           </div>
@@ -1189,9 +1186,9 @@ Y&=Y(T),\\
               <h2>Forecasting and Diagnostics</h2>
             </div>
             <p className="section-lede">
-              The website reuses figures from the manuscript and processed
-              results. The key message is that NACF maintains strong factual
-              forecasting performance while providing evidence of
+              The plots below summarize the main diagnostics reported in the
+              manuscript and the data behind the interactive examples. NACF
+              maintains strong factual forecasting performance while showing
               treatment-intensity structure, improved representation balance, and
               interpretable news-related demand perturbations.
             </p>
@@ -1255,7 +1252,7 @@ Y&=Y(T),\\
           <div className="section-head">
             <div>
               <p className="section-kicker">Interactive Demo</p>
-              <h2>Browser-Only Counterfactual Tool</h2>
+              <h2>Counterfactual Scenario Explorer</h2>
             </div>
             <p className="section-lede">
               This panel follows the tutorial notebook: observed-news prediction,
@@ -1289,9 +1286,9 @@ Y&=Y(T),\\
               />
             </div>
             <p className="figure-caption">
-              Paper figure: factual forecast, reference-treatment counterfactual
-              forecast, true future load, net perturbation, and representative
-              high-relevance news signals in the same historical window.
+              Case-study figure: factual forecast, reference-treatment
+              counterfactual forecast, true future load, net perturbation, and
+              high-relevance news signals for the same historical window.
             </p>
           </div>
         </div>
