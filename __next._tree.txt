@@ -1,0 +1,4 @@
+:HL["/counterfactual-load-forecasting-web/_next/static/chunks/0eylbqvl6.32i.css","style"]
+:HC["/",""]
+:HL["/counterfactual-load-forecasting-web/_next/static/chunks/0uu9x_.ql_3u3.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"aXPZ6r1Arah9aPBRmoSap"}

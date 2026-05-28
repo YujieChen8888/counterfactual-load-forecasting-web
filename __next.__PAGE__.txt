@@ -1,0 +1,10 @@
+1:"$Sreact.fragment"
+2:I[47257,["/counterfactual-load-forecasting-web/_next/static/chunks/0kx3u3u77v4~r.js"],"ClientPageRoot"]
+3:I[52683,["/counterfactual-load-forecasting-web/_next/static/chunks/0kx3u3u77v4~r.js","/counterfactual-load-forecasting-web/_next/static/chunks/0kvz1k6xw9ze~.js"],"default"]
+6:I[97367,["/counterfactual-load-forecasting-web/_next/static/chunks/0kx3u3u77v4~r.js"],"OutletBoundary"]
+7:"$Sreact.suspense"
+:HL["/counterfactual-load-forecasting-web/_next/static/chunks/0uu9x_.ql_3u3.css","style"]
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","link","0",{"rel":"stylesheet","href":"/counterfactual-load-forecasting-web/_next/static/chunks/0uu9x_.ql_3u3.css","precedence":"next"}],["$","script","script-0",{"src":"/counterfactual-load-forecasting-web/_next/static/chunks/0kvz1k6xw9ze~.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"aXPZ6r1Arah9aPBRmoSap"}
+4:{}
+5:"$0:rsc:props:children:0:props:serverProvidedParams:params"
+8:null
