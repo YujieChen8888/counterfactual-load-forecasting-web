@@ -798,9 +798,9 @@ export default function Home() {
           <a href="#results">Results</a>
           <a href="#demo">Demo</a>
           <a href="#case">Case Study</a>
-          <a className="nav-action" href={assetPath("/data/nacf-demo.json")} download>
+          <a className="nav-action" href="#demo" onClick={(e) => { e.preventDefault(); document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' }); }}>
             <Database size={15} />
-            Demo Data
+            Demo
           </a>
         </div>
       </nav>
@@ -1050,14 +1050,11 @@ Y&=Y(T),\\
                 terms that can be controlled with observed data.
               </p>
               <MathBlock
-                expression={String.raw`\begin{aligned}
-\epsilon(h)\leq{}&\epsilon_w(h)+\mathrm{IPM}_{\Delta}(\Phi)\\
-&+C_1\alpha\delta+C_0
-\end{aligned}`}
+                expression={String.raw`\epsilon(h)\leq \epsilon_w(h)+\mathrm{IPM}_{\Delta}(\Phi)+C_1\alpha\delta+C_0`}
               />
               <p className="formula-note">
                 Weighted factual loss maps to learned sample reweighting;
-                IPM_Delta(Phi) maps to MMD-based representation balance; the
+                IPM_Δ(Φ) maps to MMD-based representation balance; the
                 discretization term maps to treatment-intensity binning for
                 continuous news treatments.
               </p>
@@ -1263,9 +1260,7 @@ Y&=Y(T),\\
             <p className="section-lede">
               This panel follows the tutorial notebook: observed-news prediction,
               reference-treatment counterfactual prediction, and custom-news
-              scenario prediction for the same historical operating context. It
-              uses exported predictions and news metadata, not the model
-              checkpoint.
+              scenario prediction for the same historical operating context.
             </p>
           </div>
           <InteractiveDemo />
