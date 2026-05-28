@@ -1302,10 +1302,6 @@ Y&=Y(T),\\
           <span>
             {data.paper.title} · {data.paper.authors.join(", ")}
           </span>
-          <span>
-            Demo data generated from processed predictions under{" "}
-            {data.dataset.region}.
-          </span>
         </div>
       </footer>
     </main>
