@@ -49,12 +49,12 @@ type HistoryPoint = {
 type EventItem = {
   type: string;
   category: CategoryKey;
-  scope: string;
+  scope?: string;
   relevance: number;
-  publicationTime: string;
+  publicationTime?: string;
   text: string;
-  justification: string;
-  source: string;
+  justification?: string;
+  source?: string;
   timestep?: number;
 };
 
@@ -66,10 +66,10 @@ type CaseItem = {
   forecastStart: string;
   forecastEnd: string;
   eventCount: number;
-  categoryCounts: Partial<Record<CategoryKey, number>>;
+  categoryCounts?: Partial<Record<CategoryKey, number>>;
   meanPerturbation: number;
-  absMeanPerturbation: number;
-  peakAbsPerturbation: number;
+  absMeanPerturbation?: number;
+  peakAbsPerturbation?: number;
   rmse: number;
   context: {
     meanLoad: number;
@@ -89,15 +89,15 @@ type CustomScenarioPoint = {
   hour: number;
   time: string;
   custom: number;
-  perturbation: number;
-  differenceFromFactual: number;
+  perturbation?: number;
+  differenceFromFactual?: number;
 };
 
 type CustomScenario = {
   id: string;
   label: string;
   category: CategoryKey;
-  notebookCategory: string;
+  notebookCategory?: string;
   meanVsNoNews: number;
   meanVsFactual: number;
   absMeanVsNoNews: number;
@@ -110,9 +110,9 @@ type SummaryItem = {
   category: CategoryKey;
   label: string;
   count: number;
-  meanPerturbation: number;
+  meanPerturbation?: number;
   absMeanPerturbation: number;
-  maxAbsPerturbation: number;
+  maxAbsPerturbation?: number;
 };
 
 type ScatterItem = {
@@ -171,7 +171,7 @@ type DemoData = {
   };
 };
 
-const data = demoData as DemoData;
+const data = demoData as unknown as DemoData;
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const assetPath = (path: string) => `${basePath}${path}`;
 
@@ -707,8 +707,8 @@ function InteractiveDemo() {
           </div>
           <div className="events-list">
             {(mode === "custom" ? activeScenario.events : activeCase.events).length ? (
-              (mode === "custom" ? activeScenario.events : activeCase.events).slice(0, 4).map((event) => (
-                <article className="event-item" key={`${event.publicationTime}-${event.text}`}>
+              (mode === "custom" ? activeScenario.events : activeCase.events).slice(0, 4).map((event, index) => (
+                <article className="event-item" key={`${event.type}-${event.text}-${index}`}>
                   <div className="event-meta">
                     <span
                       className="pill"
@@ -753,7 +753,7 @@ function InteractiveDemo() {
                 return (
                   <div
                     className="bar-row"
-                    key={item.category}
+                    key={`${item.category}-${item.label}`}
                     style={
                       {
                         "--cat": data.categories[item.category].color,
