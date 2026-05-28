@@ -1,6 +1,6 @@
 # NACF Counterfactual Load Forecasting Website
 
-Academic project website for `Quantifying Event-Driven Demand Perturbations in Load Forecasting Using News-Aware Representation Learning`.
+Academic project website for `Counterfactual Load Forecasting with LLM-Structured Events and Representation Learning`.
 
 The interactive demo is browser-only. It uses preprocessed prediction curves and structured news metadata in `public/data/nacf-demo.json`; it does not load model checkpoints or expose trained weights.
 

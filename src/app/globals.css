@@ -119,7 +119,7 @@ button {
   position: relative;
   display: grid;
   min-height: calc(100vh - 4.1rem);
-  align-items: center;
+  align-items: end;
   padding: clamp(3rem, 7vw, 6rem) clamp(1rem, 4vw, 4rem) 2.4rem;
   overflow: hidden;
 }
@@ -340,7 +340,7 @@ button {
 }
 
 .intro-figure .figure-frame img {
-  aspect-ratio: 1.95 / 1;
+  aspect-ratio: 2.57 / 1;
   background: white;
 }
 
@@ -506,7 +506,6 @@ button {
 .figure-frame object {
   display: block;
   width: 100%;
-  height: 100%;
 }
 
 .figure-frame object {

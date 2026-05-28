@@ -294,7 +294,7 @@ function HeroSignal() {
           Observed-news prediction
         </text>
         <text x="18" y="56" fill="#62716b" fontSize="14">
-          paired counterfactual diagnostic
+          alternative-treatment comparison
         </text>
       </g>
     </svg>
@@ -447,8 +447,8 @@ function PerturbationChart({
       })}
       <text x={pad} y={26} fill="#62716b" fontSize="13" fontWeight="700">
         {mode === "custom"
-          ? "Custom-news perturbation relative to no-news counterfactual"
-          : "Observed-news perturbation relative to no-news counterfactual"}
+          ? "Injected-event scenario minus reference treatment"
+          : "Observed-news treatment minus reference treatment"}
       </text>
       <text x={width - pad - 92} y={height - 14} fill="#62716b" fontSize="12">
         half-hour steps
@@ -619,7 +619,9 @@ function InteractiveDemo() {
           <div className="case-stat">
             <strong>{formatMw(meanPerturbation)}</strong>
             <span>
-              {mode === "custom" ? "Mean custom vs no-news" : "Mean observed vs no-news"}
+              {mode === "custom"
+                ? "Mean injected vs reference"
+                : "Mean observed vs reference"}
             </span>
           </div>
           <div className="case-stat">
@@ -671,7 +673,7 @@ function InteractiveDemo() {
           </span>
           <span className="legend-item">
             <span className="legend-line" style={{ "--legend": "#64748b" } as React.CSSProperties} />
-            No-news counterfactual
+            Reference treatment
           </span>
           <span className="legend-item">
             <span className="legend-line" style={{ "--legend": "#17201d" } as React.CSSProperties} />
@@ -723,8 +725,8 @@ function InteractiveDemo() {
           </div>
           <p className="panel-note">
             Exported from {data.notebook.source}: factual prediction with observed
-            news, no-news counterfactual prediction, and custom-news scenario
-            prediction under one shared historical context.
+            news, reference-treatment counterfactual prediction, and custom-news
+            scenario prediction under one shared historical context.
           </p>
           <div className="summary-bars">
             {data.summary
@@ -798,10 +800,12 @@ export default function Home() {
               <span>Load Forecasting</span>
             </h1>
             <p className="hero-copy">
-              Short-term load forecasting is not only a point-prediction problem
-              during non-periodic social, weather, market, and grid events. This
-              project estimates how reported event context changes the predicted
-              demand trajectory under otherwise similar operating conditions.
+              News-reported social, environmental, and grid events can reshape
+              electricity demand beyond regular historical, weather, and
+              calendar patterns. NACF treats news as an intervenable semantic
+              treatment and estimates how the forecasted load trajectory changes
+              when observed events are removed or anticipated scenarios are
+              injected under the same historical context.
             </p>
             <div className="hero-actions">
               <a className="button primary" href="#demo">
@@ -820,12 +824,12 @@ export default function Home() {
             <div className="hero-overlay">
               <div className="mini-console">
                 <div className="mini-title">
-                  <span>Event-driven perturbation analysis</span>
+                  <span>Counterfactual load analysis</span>
                   <Gauge size={17} />
                 </div>
                 <p>
-                  Predictions are compared under the same historical load,
-                  weather, and calendar context to summarize model-estimated
+                  Factual forecasts are paired with counterfactual trajectories
+                  under alternative news treatments to estimate news-related
                   demand perturbations.
                 </p>
               </div>
@@ -848,7 +852,7 @@ export default function Home() {
           </div>
           <div className="metric">
             <strong>{formatMw(data.metrics.meanPerturbation)}</strong>
-            <span>Mean observed-news minus no-news perturbation in the trained result</span>
+            <span>Mean observed-news minus reference-treatment comparison</span>
           </div>
         </div>
       </section>
@@ -858,15 +862,15 @@ export default function Home() {
           <div className="section-head">
             <div>
               <p className="section-kicker">Motivation</p>
-              <h2>From Factual Prediction to Perturbation Analysis</h2>
+              <h2>Background and Motivation</h2>
             </div>
             <p className="section-lede">
-              The introduction argues that historical load, weather, and calendar
-              variables can forecast routine demand, but modern power systems
-              also face public-health restrictions, emergency alerts, market
-              stress, and policy disruptions. News records the timing, location,
-              and semantic content of these events before their demand-side
-              consequences are fully visible in load measurements.
+              Modern power systems are increasingly affected by non-periodic
+              social and operational shocks, including public health emergencies,
+              emergency restrictions, policy interventions, and infrastructure
+              disruptions. Many of these events are first reported, updated, and
+              interpreted through news, making news text important for
+              understanding event-driven demand changes.
             </p>
           </div>
           <div className="intro-layout">
@@ -874,48 +878,47 @@ export default function Home() {
               <article className="argument-step">
                 <span>01</span>
                 <div>
-                  <h3>Routine forecasting is not enough during disruptions</h3>
+                  <h3>Operational question</h3>
                   <p>
-                    Day-ahead and multi-day forecasts support reserve scheduling,
-                    dispatch adjustment, demand response preparation, and reserve
-                    adequacy assessment. During non-periodic events, operators
-                    also need to interpret abnormal demand trajectories.
+                    For grid operators, the value is not only knowing the future
+                    load trajectory, but also assessing how that trajectory would
+                    change under different news-event conditions.
                   </p>
                 </div>
               </article>
               <article className="argument-step">
                 <span>02</span>
                 <div>
-                  <h3>News adds event semantics, not just another feature</h3>
+                  <h3>Limit of factual prediction</h3>
                   <p>
-                    News archives provide event timing, location, category, and
-                    textual context that are absent from conventional load,
-                    weather, and calendar variables.
+                    Existing news-augmented load forecasting studies use news as
+                    an auxiliary feature to reduce point-forecast error, but they
+                    cannot answer what the load trajectory would be if the news
+                    condition were different.
                   </p>
                 </div>
               </article>
               <article className="argument-step">
                 <span>03</span>
                 <div>
-                  <h3>Point-forecast improvement is insufficient</h3>
+                  <h3>Counterfactual load forecasting</h3>
                   <p>
-                    Existing news-augmented models mainly ask whether text
-                    improves factual forecast accuracy. The paper asks the
-                    operational diagnostic question: how much does the predicted
-                    trajectory change under the observed event context?
+                    Counterfactual analysis estimates the demand perturbation
+                    associated with removing an observed event or injecting an
+                    anticipated event scenario while keeping the same historical
+                    operating context.
                   </p>
                 </div>
               </article>
               <article className="argument-step">
                 <span>04</span>
                 <div>
-                  <h3>The comparison is observational and confounded</h3>
+                  <h3>Observed-confounding adjustment</h3>
                   <p>
-                    Heatwaves, public holidays, reliability warnings, and market
-                    stress can both influence demand and trigger news coverage.
-                    NACF therefore compares factual and baseline predictions with
-                    representation balancing rather than treating raw news
-                    correlations as directly interpretable effects.
+                    The same high temperatures that drive cooling demand can also
+                    trigger weather-warning news. NACF therefore learns a
+                    confounder representation and balances it across
+                    treatment-intensity groups.
                   </p>
                 </div>
               </article>
@@ -924,15 +927,16 @@ export default function Home() {
             <div className="paper-figure intro-figure">
               <div className="figure-frame">
                 <img
-                  src={assetPath("/figures/causal_forecasting_intro.png")}
-                  alt="Motivation of news-aware event-driven load forecasting"
+                  src={assetPath("/figures/intro_motivation.png")}
+                  alt="Comparison between existing news-augmented forecasting and the proposed NACF framework"
                 />
               </div>
               <p className="figure-caption">
-                Introduction figure: conventional news-augmented factual
-                forecasting is contrasted with NACF's confounding-aware
-                factual-versus-baseline perturbation analysis under the same
-                historical operating context.
+                Paper Figure Intro_motivation: comparison between existing
+                news-augmented forecasting and the proposed NACF framework. NACF
+                not only produces factual load forecasts, but also enables
+                explicit changes to news interventions for counterfactual
+                prediction.
               </p>
             </div>
           </div>
@@ -943,15 +947,16 @@ export default function Home() {
         <div className="section-inner">
           <div className="section-head">
             <div>
-              <p className="section-kicker">Theoretical Basis</p>
-              <h2>What Is Being Compared</h2>
+              <p className="section-kicker">Theoretical Foundations</p>
+              <h2>Counterfactual Error Is Unobserved</h2>
             </div>
             <p className="section-lede">
-              NACF uses potential-outcome language as an operational diagnostic
-              interface. The comparison holds the same historical operating
-              context fixed, changes the news-event representation, and treats
-              the prediction difference as a model-estimated event-driven demand
-              perturbation.
+              Counterfactual outcomes are never observed, so the counterfactual
+              prediction error cannot be directly minimized from data. NACF
+              formalizes news as a continuous treatment in a potential-outcome
+              framework and uses a continuous-treatment generalization bound to
+              connect this unobservable error with observable training
+              objectives.
             </p>
           </div>
 
@@ -962,14 +967,17 @@ export default function Home() {
               </div>
               <h3>Observational sample</h3>
               <p>
-                Each sample contains historical multivariate time series, a
-                continuous news-event representation, and the future load
-                trajectory.
+                Each sample contains the historical multivariate time series,
+                the continuous semantic treatment encoding news information, and
+                the future load trajectory.
               </p>
-              <pre className="formula">D = {"{(X_i, T_i, Y_i)}"} for i = 1,...,n</pre>
+              <pre className="formula">{`D = {(X_i, T_i, Y_i)}_{i=1}^n
+Y = Y(T)
+mu(t, x) = E[Y(t) | X = x]`}</pre>
               <p className="formula-note">
-                X includes load, weather, and calendar history; T is extracted
-                from structured news; Y is the future demand horizon.
+                X includes load, meteorological variables, and calendar
+                indicators; T encodes news event information; Y is the future
+                load horizon.
               </p>
             </article>
 
@@ -977,18 +985,16 @@ export default function Home() {
               <div className="comparison-icon">
                 <SlidersHorizontal size={24} />
               </div>
-              <h3>Factual-versus-baseline perturbation</h3>
+              <h3>Counterfactual comparison</h3>
               <p>
-                The operational quantity is the horizon-wise prediction
-                difference under observed news and a baseline no-event
-                representation.
+                The target comparison changes the news treatment while holding
+                the same historical operating context fixed.
               </p>
-              <pre className="formula">{`Y_hat_i^F = f_pred(Phi(X_i), T_i)
-Y_hat_i^0 = f_pred(Phi(X_i), T_0)
-tau_hat_i = Y_hat_i^F - Y_hat_i^0`}</pre>
+              <pre className="formula">{`mu(T_observed, x) - mu(T_0, x)`}</pre>
               <p className="formula-note">
-                The paper interprets tau_hat as a model-estimated event-driven
-                demand perturbation, not as an externally verified event effect.
+                This estimates news-related demand perturbations under observed
+                versus alternative news conditions, such as a no-news reference
+                treatment or an injected event scenario.
               </p>
             </article>
 
@@ -996,17 +1002,17 @@ tau_hat_i = Y_hat_i^F - Y_hat_i^0`}</pre>
               <div className="comparison-icon">
                 <ShieldCheck size={24} />
               </div>
-              <h3>Why representation balancing is used</h3>
+              <h3>Why balance is needed</h3>
               <p>
-                Standard empirical risk minimization can entangle news signals
-                with background drivers. NACF therefore learns Z = Phi(X) and
-                uses reweighting plus MMD-based IPM regularization to reduce
-                treatment-context imbalance.
+                A model trained only on factual outcomes may exploit confounded
+                correlations. For example, high temperatures can both trigger
+                weather-warning news and directly increase cooling demand.
               </p>
-              <pre className="formula">mu(t, z) = E[Y | T = t, Z = z]</pre>
+              <pre className="formula">{`Z = Phi(X)
+T <- Z -> Y`}</pre>
               <p className="formula-note">
-                The baseline response comparison mu(T_i, Z_i) - mu(T_0, Z_i)
-                is the response-surface version of the perturbation estimate.
+                NACF learns a confounder representation Z and reduces its
+                distributional discrepancy across treatment-intensity groups.
               </p>
             </article>
 
@@ -1014,19 +1020,17 @@ tau_hat_i = Y_hat_i^F - Y_hat_i^0`}</pre>
               <div className="comparison-icon">
                 <BarChart3 size={24} />
               </div>
-              <h3>Continuous-treatment motivation</h3>
+              <h3>Generalization bound for continuous treatments</h3>
               <p>
-                News treatments are continuous and high-dimensional, so NACF
-                groups samples by treatment-intensity neighborhoods and minimizes
-                distributional discrepancy in the latent operating-context space.
+                The bound decomposes the unobservable counterfactual error into
+                terms that can be controlled with observed data.
               </p>
               <pre className="formula">epsilon(h) &lt;= epsilon_w(h) + IPM_Delta(Phi) + C1 * alpha * delta + C0</pre>
               <p className="formula-note">
-                In the paper, this bound motivates a weighted factual prediction
-                term, an IPM balance term, and discretized neighborhoods for
-                continuous news treatments. It is used as design motivation and
-                confounding-aware regularization, not as proof that all
-                confounding is removed.
+                Weighted factual loss maps to learned sample reweighting;
+                IPM_Delta(Phi) maps to MMD-based representation balance; the
+                discretization term maps to treatment-intensity binning for
+                continuous news treatments.
               </p>
             </article>
           </div>
@@ -1038,31 +1042,31 @@ tau_hat_i = Y_hat_i^F - Y_hat_i^0`}</pre>
           <div className="section-head">
             <div>
               <p className="section-kicker">Paper</p>
-              <h2>What This Work Studies</h2>
+              <h2>Contributions</h2>
             </div>
             <p className="section-lede">
-              The paper reframes news-augmented load forecasting as event-driven
-              demand perturbation analysis. It compares factual forecasts under
-              observed news with baseline forecasts under a no-news representation,
-              while keeping the same historical operating context fixed.
+              The paper proposes the News-Aware Counterfactual Load Analysis
+              Framework (NACF), treating news not merely as an auxiliary
+              predictive signal but as a continuous semantic treatment that can
+              be intervened on for counterfactual load analysis.
             </p>
           </div>
           <div className="metric-grid">
             <div className="stat">
-              <strong>{data.dataset.rows.toLocaleString()}</strong>
-              <span>Half-hourly NSW observations in the prepared 2019 dataset</span>
+              <strong>1</strong>
+              <span>Counterfactual formulation for news-impact load analysis</span>
             </div>
             <div className="stat">
-              <strong>{data.dataset.events.toLocaleString()}</strong>
-              <span>LLM-extracted demand-relevant news events in the prepared 2019 data</span>
+              <strong>2</strong>
+              <span>Structured news-to-treatment pipeline using offline LLM extraction</span>
             </div>
             <div className="stat">
-              <strong>48</strong>
-              <span>Historical steps and forecast steps used by the interactive demo</span>
+              <strong>3</strong>
+              <span>Generalization-bound-guided architecture and training objective</span>
             </div>
             <div className="stat">
-              <strong>5</strong>
-              <span>Structured event categories spanning environment, society, and grid</span>
+              <strong>4</strong>
+              <span>Empirical validation for reliable counterfactual load analysis</span>
             </div>
           </div>
         </div>
@@ -1073,14 +1077,14 @@ tau_hat_i = Y_hat_i^F - Y_hat_i^0`}</pre>
           <div className="section-head">
             <div>
               <p className="section-kicker">NACF Method</p>
-              <h2>News-Aware Context-Balancing Framework</h2>
+              <h2>News-Aware Counterfactual Load Analysis Framework</h2>
             </div>
             <p className="section-lede">
-              NACF combines multivariate time-series encoding, structured news
-              treatment encoding, a treatment-dependent response network, and
-              IPM-based representation balancing. The balancing step reduces the
-              degree to which treatment intensity is entangled with observed load,
-              weather, and calendar conditions.
+              Guided by the continuous-treatment bound, NACF converts raw news
+              into structured event streams, learns confounder and treatment
+              representations, and estimates treatment-dependent load
+              trajectories with a varying-coefficient response network trained by
+              weighted factual loss and IPM-based representation balance.
             </p>
           </div>
 
@@ -1089,43 +1093,46 @@ tau_hat_i = Y_hat_i^F - Y_hat_i^0`}</pre>
               <div className="flow-step">
                 <Search size={26} />
                 <div>
-                  <h3>Structured event extraction</h3>
+                  <h3>LLM-structured event stream</h3>
                   <p>
-                    News articles are converted into category, temporal type,
-                    scope, relevance, and text fields used as an intervenable
-                    treatment representation.
+                    An offline LLM-based extraction step converts unstructured
+                    news articles into time-stamped event records with category,
+                    temporal type, scope, relevance, and textual evidence.
                   </p>
                 </div>
               </div>
               <div className="flow-step">
                 <BrainCircuit size={26} />
                 <div>
-                  <h3>Operating-context encoder</h3>
+                  <h3>Confounder and treatment encoders</h3>
                   <p>
-                    Load, weather, and calendar histories are encoded into a
-                    latent operating state that supports observed-news and no-news
-                    forecasts under the same context.
+                    Historical load, meteorological variables, and calendar
+                    indicators are encoded as the adjustment representation, while
+                    the event stream is mapped into a continuous semantic
+                    treatment space.
                   </p>
                 </div>
               </div>
               <div className="flow-step">
                 <ShieldCheck size={26} />
                 <div>
-                  <h3>Reweighting and IPM regularization</h3>
+                  <h3>Weighted factual loss and IPM balance</h3>
                   <p>
-                    Reweighting and MMD-based IPM loss encourage comparable
-                    representations across treatment-intensity groups.
+                    Learned sample reweighting controls the weighted factual
+                    prediction term, while MMD-based balance regularization
+                    reduces representation imbalance across treatment-intensity
+                    groups.
                   </p>
                 </div>
               </div>
               <div className="flow-step">
                 <LineChart size={26} />
                 <div>
-                  <h3>Observed-news versus no-news comparison</h3>
+                  <h3>Counterfactual load analysis</h3>
                   <p>
-                    The estimated perturbation is the horizon-wise difference
-                    between the observed-news forecast and the no-news
-                    counterfactual prediction.
+                    The response network generates factual and counterfactual
+                    load trajectories under observed, removed, or injected news
+                    treatments to estimate demand perturbations.
                   </p>
                 </div>
               </div>
@@ -1133,18 +1140,15 @@ tau_hat_i = Y_hat_i^F - Y_hat_i^0`}</pre>
 
             <div className="paper-figure">
               <div className="figure-frame">
-                <object
-                data={assetPath("/figures/model_structure_diagram.pdf")}
-                  type="application/pdf"
-                  title="NACF model structure"
-                >
-                  <img src={assetPath("/figures/representation_balance.png")} alt="NACF model structure" />
-                </object>
+                <img
+                  src={assetPath("/figures/model_structure_diagram.png")}
+                  alt="NACF model structure"
+                />
               </div>
               <p className="figure-caption">
-                Paper figure: the framework connects context encoding, treatment
-                encoding, varying-coefficient response modeling, and balanced
-                training objectives.
+                Paper figure: overview of NACF, including structured event stream
+                construction, model architecture, and counterfactual inference
+                for load analysis.
               </p>
             </div>
           </div>
@@ -1159,10 +1163,11 @@ tau_hat_i = Y_hat_i^F - Y_hat_i^0`}</pre>
               <h2>Forecasting and Diagnostics</h2>
             </div>
             <p className="section-lede">
-              The website reuses figures from the manuscript and the trained
-              result folder. The key message is that the factual forecast remains
-              competitive while the model exposes interpretable event-driven
-              perturbation estimates.
+              The website reuses figures from the manuscript and processed
+              results. The key message is that NACF maintains strong factual
+              forecasting performance while providing evidence of
+              treatment-intensity structure, improved representation balance, and
+              interpretable news-related demand perturbations.
             </p>
           </div>
           <div className="results-grid">
@@ -1170,8 +1175,9 @@ tau_hat_i = Y_hat_i^F - Y_hat_i^0`}</pre>
               <img src={assetPath("/figures/category_perturbations.png")} alt="Category-specific perturbations" />
               <h3>Category-specific perturbations</h3>
               <p>
-                Environmental thermal news has the highest Abs-CMP in the paper,
-                while social events show strong bidirectional window effects.
+                News effects are aggregated by category using absolute CATE and
+                ITE distributions, showing heterogeneous impacts across
+                environmental, social, economic, and grid events.
               </p>
             </article>
             <article className="figure-tile">
@@ -1194,8 +1200,8 @@ tau_hat_i = Y_hat_i^F - Y_hat_i^0`}</pre>
               <img src={assetPath("/figures/intensity_distributions.png")} alt="News treatment intensity" />
               <h3>Treatment intensity</h3>
               <p>
-                Learned news intensity remains graded rather than collapsing all
-                news windows into a single treatment state.
+                The learned treatment representation preserves a graded notion
+                of semantic departure from the no-news reference baseline.
               </p>
             </article>
             <article className="figure-tile">
@@ -1227,9 +1233,10 @@ tau_hat_i = Y_hat_i^F - Y_hat_i^0`}</pre>
             </div>
             <p className="section-lede">
               This panel follows the tutorial notebook: observed-news prediction,
-              no-news counterfactual prediction, and custom-news scenario
-              prediction for the same historical operating context. It uses
-              exported predictions and news metadata, not the model checkpoint.
+              reference-treatment counterfactual prediction, and custom-news
+              scenario prediction for the same historical operating context. It
+              uses exported predictions and news metadata, not the model
+              checkpoint.
             </p>
           </div>
           <InteractiveDemo />
@@ -1258,9 +1265,9 @@ tau_hat_i = Y_hat_i^F - Y_hat_i^0`}</pre>
               />
             </div>
             <p className="figure-caption">
-              Paper figure: factual forecast, baseline no-event forecast, true
-              future load, net perturbation, and representative high-relevance
-              news signals in the same historical window.
+              Paper figure: factual forecast, reference-treatment counterfactual
+              forecast, true future load, net perturbation, and representative
+              high-relevance news signals in the same historical window.
             </p>
           </div>
         </div>
