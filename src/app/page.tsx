@@ -464,8 +464,8 @@ function PerturbationChart({
       })}
       <text x={pad} y={26} fill="#62716b" fontSize="13" fontWeight="700">
         {mode === "custom"
-          ? "Injected-event scenario minus reference treatment"
-          : "Observed-news treatment minus reference treatment"}
+          ? "Injected-event scenario minus no-news baseline"
+          : "Observed-news treatment minus no-news baseline"}
       </text>
       <text x={width - pad - 92} y={height - 14} fill="#62716b" fontSize="12">
         half-hour steps
@@ -742,7 +742,7 @@ function InteractiveDemo() {
           </div>
           <p className="panel-note">
             Exported from {data.notebook.source}: factual prediction with observed
-            news, reference-treatment counterfactual prediction, and custom-news
+            news, no-news-baseline counterfactual prediction, and custom-news
             scenario prediction under one shared historical context.
           </p>
           <div className="summary-bars">
@@ -869,7 +869,7 @@ export default function Home() {
           </div>
           <div className="metric">
             <strong>{formatMw(data.metrics.meanPerturbation)}</strong>
-            <span>Mean observed-news minus reference-treatment comparison</span>
+            <span>Mean observed-news minus no-news-baseline comparison</span>
           </div>
         </div>
       </section>
@@ -1014,8 +1014,8 @@ Y&=Y(T),\\
               />
               <p className="formula-note">
                 This estimates news-related demand perturbations under observed
-                versus alternative news conditions, such as a no-news reference
-                treatment or an injected event scenario.
+                versus alternative news conditions, such as the no-news baseline
+                or an injected event scenario.
               </p>
             </article>
 
@@ -1224,7 +1224,7 @@ Y&=Y(T),\\
               <h3>Treatment intensity</h3>
               <p>
                 The learned treatment representation preserves a graded notion
-                of semantic departure from the no-news reference baseline.
+                of semantic departure from the no-news baseline.
               </p>
             </article>
             <article className="figure-tile">
@@ -1256,7 +1256,7 @@ Y&=Y(T),\\
             </div>
             <p className="section-lede">
               This panel follows the tutorial notebook: observed-news prediction,
-              reference-treatment counterfactual prediction, and custom-news
+              no-news-baseline counterfactual prediction, and custom-news
               scenario prediction for the same historical operating context.
             </p>
           </div>
@@ -1286,8 +1286,8 @@ Y&=Y(T),\\
               />
             </div>
             <p className="figure-caption">
-              Case-study figure: factual forecast, reference-treatment
-              counterfactual forecast, true future load, net perturbation, and
+              Case-study figure: factual forecast, counterfactual forecast with
+              news masked, true future load, net perturbation, and
               high-relevance news signals for the same historical window.
             </p>
           </div>
