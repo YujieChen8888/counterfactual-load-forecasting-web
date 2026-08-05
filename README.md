@@ -42,15 +42,6 @@ Project website: <https://yujiechen8888.github.io/counterfactual-load-forecastin
 
 The released checkpoint contains NACF-trained parameters only. The sentence encoder `sentence-transformers/all-MiniLM-L6-v2` is loaded through `sentence-transformers` at runtime.
 
-## Run The Website
-
-```bash
-npm install
-npm run dev
-```
-
-Then open the local URL printed by Next.js.
-
 ## Run NACF
 
 Create a Python environment and install the NACF dependencies:
@@ -83,6 +74,14 @@ jupyter notebook notebooks/counterfactual_inference_tutorial.ipynb
 
 Run all cells to reproduce a single-window counterfactual inference example with observed news, no-news baseline, and a custom injected event.
 The notebook uses the released public checkpoint at `weights/nacf_nsw_2019_public.pth`.
+
+## Acknowledgements and Code References
+
+We thank the authors and maintainers of the following open-source repositories, which provided helpful references for this work:
+
+- [From_News_to_Forecast](https://github.com/daydreamer-amelia/From_News_to_Forecast)
+- [CausalMob](https://github.com/YangXiaojie1998/CausalMob)
+- [Time-Series-Library](https://github.com/thuml/Time-Series-Library)
 
 ## Citation
 
