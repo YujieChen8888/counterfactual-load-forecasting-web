@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Model weights and checkpoints
+*.pth
+*.pt
+*.ckpt
+*.pkl
+*.pickle
+*.h5
+*.safetensors
+!weights/
+!weights/nacf_nsw_2019_public.pth
+
+# Generated arrays and local datasets not intended for release
+*.npz
+*.npy
+checkpoints/
+
+# Logs
+*.log
+logs/
+runs/
+tensorboard/
+
+# HuggingFace cache
+.cache/
+huggingface/
+
+
+results/
+results0/
+
+results1/
+results3/
+results4/
