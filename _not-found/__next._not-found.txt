@@ -2,4 +2,4 @@
 2:I[39756,["/counterfactual-load-forecasting-web/_next/static/chunks/0kx3u3u77v4~r.js"],"default"]
 3:I[37457,["/counterfactual-load-forecasting-web/_next/static/chunks/0kx3u3u77v4~r.js"],"default"]
 4:[]
-0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"Qtl5Ja4b--3aT-lBKtzNE"}
+0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"V7I0dE3ur7ymZO_BsFHtw"}
