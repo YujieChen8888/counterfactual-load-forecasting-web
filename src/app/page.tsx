@@ -173,6 +173,7 @@ type DemoData = {
 
 const data = demoData as unknown as DemoData;
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+const repoUrl = "https://github.com/YujieChen8888/counterfactual-load-forecasting-web";
 const assetPath = (path: string) => `${basePath}${path}`;
 
 function MathBlock({ expression }: { expression: string }) {
@@ -798,6 +799,10 @@ export default function Home() {
           <a href="#results">Results</a>
           <a href="#demo">Demo</a>
           <a href="#case">Case Study</a>
+          <a className="nav-action" href={repoUrl} target="_blank" rel="noreferrer">
+            <Github size={15} />
+            Code
+          </a>
           <a className="nav-action" href="#demo" onClick={(e) => { e.preventDefault(); document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' }); }}>
             <Database size={15} />
             Demo
