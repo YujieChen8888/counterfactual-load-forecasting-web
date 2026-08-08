@@ -23,7 +23,7 @@ Project website: <https://yujiechen8888.github.io/counterfactual-load-forecastin
 .
 ├── src/                         # Next.js project website
 ├── public/                      # Website figures and demo data
-└── nacf/                        # Reproducible NACF code release
+└── code/                        # Reproducible code release
     ├── data/
     │   └── nsw_2019_structured_events.csv
     ├── weights/
@@ -47,7 +47,7 @@ The released checkpoint contains NACF-trained parameters only. The sentence enco
 Create a Python environment and install the NACF dependencies:
 
 ```bash
-cd nacf
+cd code
 pip install -r requirements.txt
 ```
 
@@ -63,12 +63,12 @@ By default, this command trains on:
 data/nsw_2019_structured_events.csv
 ```
 
-Training outputs are written to `nacf/results/` and are ignored by git.
+Training outputs are written to `code/results/` and are ignored by git.
 
 ## Run The Notebook
 
 ```bash
-cd nacf
+cd code
 jupyter notebook notebooks/counterfactual_inference_tutorial.ipynb
 ```
 
